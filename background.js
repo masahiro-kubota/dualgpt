@@ -34,6 +34,27 @@ chrome.action.onClicked.addListener((tab) => {
               const inputText = results[0].result;
               console.log("取得した入力内容:", inputText);
 
+              // 現在のタブで送信ボタンをクリック
+              chrome.scripting.executeScript(
+                {
+                  target: { tabId: tab.id },
+                  func: () => {
+                    const sendButton = document.querySelector('button[data-testid="send-button"]');
+                    if (sendButton) {
+                      console.log("現在のタブで送信ボタンをクリックします:", sendButton);
+                      sendButton.click();
+                    } else {
+                      console.error("現在のタブで送信ボタンが見つかりません");
+                    }
+                  }
+                },
+                () => {
+                  if (chrome.runtime.lastError) {
+                    console.error("現在のタブでのスクリプト実行エラー:", chrome.runtime.lastError.message);
+                  }
+                }
+              );
+
               // 新しいタブに入力内容を送信して送信ボタンをクリック
               setTimeout(() => {
                 chrome.scripting.executeScript(
