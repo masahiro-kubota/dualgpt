@@ -1,0 +1,15 @@
+
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Sync Tabs",
+  "version": "1.0",
+  "permissions": ["tabs", "scripting", "notifications"],
+  "host_permissions": ["https://chatgpt.com/*"],
+  "action": {
+    "default_title": "Sync ChatGPT Tabs"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
+
