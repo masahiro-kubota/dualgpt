@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Sync Tabs",
+  "name": "Dual ChatGPT",
   "version": "1.0",
   "permissions": ["tabs", "scripting", "notifications", "storage"],
   "host_permissions": ["https://chatgpt.com/*"],
   "options_page": "options.html",
   "action": {
-    "default_title": "Sync ChatGPT Tabs"
+    "default_title": "Dual ChatGPT"
   },
   "background": {
     "service_worker": "background.js"
