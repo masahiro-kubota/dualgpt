@@ -1,4 +1,3 @@
-
 let newTabId = null;
 
 chrome.action.onClicked.addListener((tab) => {
@@ -8,7 +7,7 @@ chrome.action.onClicked.addListener((tab) => {
     console.log("ChatGPTのページを検出");
 
     // 新しいタブをバックグラウンドで開く
-    chrome.tabs.create({ url: "https://chatgpt.com/", active: false }, (newTab) => {
+    chrome.tabs.create({ url: "https://chatgpt.com/?model=o1-pro", active: false }, (newTab) => {
       newTabId = newTab.id;
       console.log("新しいタブをバックグラウンドで開きました:", newTabId);
 
@@ -30,12 +29,28 @@ chrome.action.onClicked.addListener((tab) => {
             const inputText = results[0].result;
             console.log("取得した入力内容:", inputText);
 
-            // 新しいタブに入力内容を送信
+            // 新しいタブに入力内容を送信して送信ボタンをクリック
             setTimeout(() => {
               chrome.scripting.executeScript(
                 {
                   target: { tabId: newTabId },
                   func: (text) => {
+                    const sendButtonSelector = 'button[data-testid="send-button"]';
+
+                    // ボタンが見つかるまで監視
+                    const observer = new MutationObserver(() => {
+                      const sendButton = document.querySelector(sendButtonSelector);
+                      if (sendButton) {
+                        console.log("送信ボタンが見つかりました:", sendButton);
+                        sendButton.click(); // ボタンをクリック
+                        observer.disconnect(); // 監視を終了
+                      }
+                    });
+
+                    // MutationObserverでDOMの変更を監視
+                    observer.observe(document.body, { childList: true, subtree: true });
+
+                    // 入力内容を設定
                     const editableDiv = document.querySelector('[contenteditable="true"]');
                     if (editableDiv) {
                       console.log("新しいタブのcontenteditable要素に内容を送信:", text);
